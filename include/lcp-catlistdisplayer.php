@@ -402,7 +402,9 @@ class CatListDisplayer {
     return $this->assign_style($info, $tag);
   }
 
-  private function get_post_title($single, $tag = null, $css_class = null){
+  private function get_post_title($single, $tag = null, $css_class = null, $css_id = true, $background){
+    // var_dump($this->params);
+
     $info = '<a href="' . get_permalink($single->ID);
 
     $lcp_post_title = apply_filters('the_title', $single->post_title, $single->ID);
@@ -420,9 +422,18 @@ class CatListDisplayer {
       $info .= ' target="' . $this->params['link_target'] . '" ';
     endif;
 
+    if($css_id) $info .= ' id="catlist-post-'.$single->ID.'"';
+
     if ( !empty($this->params['title_class'] ) &&
          empty($this->params['title_tag']) ):
       $info .= ' class="' . $this->params['title_class'] . '"';
+    endif;
+
+    if($background):
+      $info .= ' style="background-image: url('.wp_get_attachment_image_src(
+        get_post_thumbnail_id($single->ID ),
+        $this->params['thumbnail_size']
+      )[0].')"';
     endif;
 
     $info .= '>' . $lcp_post_title . '</a>';
